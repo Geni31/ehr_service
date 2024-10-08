@@ -20,30 +20,43 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class SimpleServer {
-    public static void main(String[] args) {
-        int port = 1234;
+public class MultiPortServer {
 
+    public static void main(String[] args) {
+        int[] ports = {1234, 1235, 1236}; // Array of ports to listen on
+
+        for (int port : ports) {
+            new Thread(new SimpleServer(port)).start();
+        }
+    }
+}
+
+class SimpleServer implements Runnable {
+    private int port;
+
+    public SimpleServer(int port) {
+        this.port = port;
+    }
+
+    @Override
+    public void run() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Server is listening on port " + port);
 
             // Accept incoming connections
             while (true) {
                 try (Socket socket = serverSocket.accept()) {
-                    System.out.println("New client connected");
+                    System.out.println("New client connected on port " + port);
 
-                    // Set up input and output streams
                     BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
 
-                    // Read a message from the client
                     String message = input.readLine();
-                    System.out.println("Received: " + message);
+                    System.out.println("Received on port " + port + ": " + message);
 
-                    // Send a response back to the client
-                    output.println("Echo: " + message);
+                    output.println("Echo from port " + port + ": " + message);
                 } catch (IOException e) {
-                    System.err.println("Error handling client: " + e.getMessage());
+                    System.err.println("Error handling client on port " + port + ": " + e.getMessage());
                 }
             }
         } catch (IOException e) {
@@ -52,4 +65,3 @@ public class SimpleServer {
         }
     }
 }
-
