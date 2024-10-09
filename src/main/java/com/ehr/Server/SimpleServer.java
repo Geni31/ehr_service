@@ -1,17 +1,4 @@
-package com.ehr;
-
-// import org.springframework.boot.SpringApplication;
-// import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-// @SpringBootApplication
-// public class EhrApplication {
-
-// 	public static void main(String[] args) {
-// 		SpringApplication.run(EhrApplication.class, args);
-// 	}
-
-// }
-
+package com.ehr.Server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,20 +7,9 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class MultiPortServer {
-
-    public static void main(String[] args) {
-        int[] ports = {1234, 1235, 1236}; // Array of ports to listen on
-
-        for (int port : ports) {
-            new Thread(new SimpleServer(port)).start();
-        }
-    }
-}
-
-class SimpleServer implements Runnable {
+public class SimpleServer implements Runnable {
     private int port;
-
+    public static String IPaddress = "localhost";
     public SimpleServer(int port) {
         this.port = port;
     }
@@ -41,7 +17,7 @@ class SimpleServer implements Runnable {
     @Override
     public void run() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
-            System.out.println("Server is listening on port " + port);
+            System.out.println("Server is ready and listening");
 
             // Accept incoming connections
             while (true) {
@@ -63,5 +39,8 @@ class SimpleServer implements Runnable {
             System.err.println("Could not listen on port " + port);
             System.exit(-1);
         }
+    }
+    public static String getIPaddress(){
+        return IPaddress;
     }
 }

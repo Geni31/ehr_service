@@ -1,4 +1,6 @@
-package com.ehr;
+package com.ehr.Services;
+
+import com.ehr.Server.SimpleServer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,12 +9,11 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Appointment {
+public class Notification_Service {
     public static void main(String[] args) {
-        String serverAddress = "localhost"; // Change to the server's IP if needed
-        int port = 1235; // Port to connect to
+        int port = 1238;
 
-        try (Socket socket = new Socket(serverAddress, port);
+        try (Socket socket = new Socket(SimpleServer.getIPaddress(), port);
              PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
              BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              Scanner scanner = new Scanner(System.in)) {
@@ -27,10 +28,8 @@ public class Appointment {
                     break;
                 }
 
-                // Send message to the server
                 output.println(userInput);
 
-                // Read response from the server
                 String response = input.readLine();
                 System.out.println("Server response: " + response);
             }
